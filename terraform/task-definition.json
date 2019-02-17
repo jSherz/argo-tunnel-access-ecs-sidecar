@@ -1,0 +1,41 @@
+[
+  {
+    "essential": true,
+    "name": "tunnel",
+    "image": "${aws_account_id}.dkr.ecr.eu-west-1.amazonaws.com/grafana-tunnel-sidecar:latest",
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "/ecs/grafana",
+        "awslogs-region": "eu-west-1",
+        "awslogs-stream-prefix": "ecs"
+      }
+    },
+    "secrets": [
+      {
+        "valueFrom": "/services/supportclient/cert.pem",
+        "name": "CERT_PEM"
+      }
+    ]
+  },
+  {
+    "essential": true,
+    "name": "app",
+    "image": "grafana/grafana:latest",
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "/ecs/grafana",
+        "awslogs-region": "eu-west-1",
+        "awslogs-stream-prefix": "ecs"
+      }
+    },
+    "portMappings": [
+      {
+        "hostPort": 3000,
+        "protocol": "tcp",
+        "containerPort": 3000
+      }
+    ]
+  }
+]
